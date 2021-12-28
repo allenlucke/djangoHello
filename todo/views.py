@@ -65,3 +65,20 @@ def todo_list_completed(request):
     if request.method == 'GET':
         todo_serializer = TodoSerializer(todos, many=True)
         return JsonResponse(todo_serializer.data, safe=False)
+
+
+@api_view(['GET'])
+def todo_list_is_completed(request, bool):
+    bool = bool
+    if request.method == 'GET':
+        if bool == '0' or bool == 0:
+            todos = Todo.objects.filter(is_complete=False)
+            todo_serializer = TodoSerializer(todos, many=True)
+            return JsonResponse(todo_serializer.data, safe=False)
+
+        elif bool == '1' or bool == 1:
+            todos = Todo.objects.filter(is_complete=True)
+            todo_serializer = TodoSerializer(todos, many=True)
+            return JsonResponse(todo_serializer.data, safe=False)
+        else :
+            return JsonResponse({'message': 'Hmmmn something is not right! Did you pass something other than a 0 or 1 for the url input?'}, status=status.HTTP_204_NO_CONTENT)
