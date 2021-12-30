@@ -23,7 +23,9 @@ def todo_list(request):
 
     elif request.method == 'POST':
         todo_data = JSONParser().parse(request)
+        print(todo_data)
         todo_serializer = TodoSerializer(data=todo_data)
+        print(todo_serializer)
         if todo_serializer.is_valid():
             todo_serializer.save()
             return JsonResponse(todo_serializer.data, status=status.HTTP_201_CREATED)

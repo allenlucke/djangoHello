@@ -22,7 +22,9 @@ class DjangoMigrations(models.Model):
 class Todo(models.Model):
     task = models.CharField(max_length=80)
     is_complete = models.BooleanField(db_column='isComplete', default=False)  # Field name made lowercase.
-    users = models.ForeignKey('users', models.DO_NOTHING)
+    users_id = models.IntegerField(db_column='users_id')
+    # users = models.ForeignKey('users', models.DO_NOTHING)
+    # users = models.ForeignKey('users', db_column='users_id')
 
     class Meta:
         managed = False
