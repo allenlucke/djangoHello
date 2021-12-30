@@ -9,7 +9,7 @@ urlpatterns = [
     url(r'^api/todos/(?P<pk>[0-9]+)$', views.todo_detail),
     url(r'^api/todos/completed$', views.todo_list_completed),
     url(r'^api/todos/is_completed/(?P<bool>[0-1]+)$', views.todo_list_is_completed),
-    # url(r'^api/todos/flip/(?P<pk>[0-9]+)$', views.todo_flip_is_completed),
+    url(r'^api/todos/switch/(?P<pk>[0-9]+)$', views.todo_switch_is_completed),
 
     url(r'^api/users', views.users_list),
     url(r'^api/users/(?P<pk>[0-9]+)$', views.user_detail),

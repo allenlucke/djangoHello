@@ -47,6 +47,10 @@ def todo_detail(request, pk):
 
     elif request.method == 'PUT':
         todo_data = JSONParser().parse(request)
+        print("todo = Todo.objects.get(pk=pk)")
+        print(todo)
+        print("todo_data = JSONParser().parse(request)")
+        print(todo_data)
         todo_serializer = TodoSerializer(todo, data=todo_data)
         if todo_serializer.is_valid():
             todo_serializer.save()
@@ -84,31 +88,33 @@ def todo_list_is_completed(request, bool):
             return JsonResponse({'message': 'Hmmmn something is not right! Did you pass something other than a 0 or 1 for the url input?'}, status=status.HTTP_204_NO_CONTENT)
 
 
-# @api_view(['PUT'])
-# def todo_flip_is_completed(request, pk):
-#     print("In todo_flip_is_completed")
-#     try:
-#         todo = Todo.objects.get(pk=pk)
-#     except Todo.DoesNotExist:
-#         return JsonResponse({'message': 'The todo does not exist'}, status=status.HTTP_404_NOT_FOUND)
-#
-#     # if request.method == 'GET':
-#     #     todo_serializer = TodoSerializer(todo)
-#     #     return JsonResponse(todo_serializer.data)
-#
-#     todo_serializer = TodoSerializer(todo)
-#
-#     print("In todo_flip_is_completed, Last before get")
-#
-#     todo_serializer.Meta.fields.index()
-#
-#     if request.method == 'PUT':
-#         todo_data = JSONParser().parse(request)
-#         todo_serializer = TodoSerializer(todo, data=todo_data)
-#         if todo_serializer.is_valid():
-#             todo_serializer.save()
-#             return JsonResponse(todo_serializer.data)
-#         return JsonResponse(todo_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+@api_view(['PUT'])
+def todo_switch_is_completed(request, pk):
+    print("In todo_flip_is_completed")
+    try:
+        todo = Todo.objects.get(pk=pk)
+    except Todo.DoesNotExist:
+        return JsonResponse({'message': 'The todo does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+
+        # Switch is_complete
+        if not todo.is_complete:
+            todo.is_complete = True
+        else:
+            todo.is_complete = False
+
+        # set todo data
+        todo_data = {
+            'task': todo.task,
+            'is_complete': todo.is_complete
+        }
+
+        todo_serializer = TodoSerializer(todo, data=todo_data)
+        if todo_serializer.is_valid():
+            todo_serializer.save()
+            return JsonResponse(todo_serializer.data)
+        return JsonResponse(todo_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Users views
 @api_view(['GET', 'POST'])
