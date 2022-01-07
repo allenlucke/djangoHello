@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^api/users', views.users_list),
     url(r'^api/users/(?P<pk>[0-9]+)$', views.user_detail),
     url(r'^api/users/is_active/(?P<bool>[0-1]+)$', views.users_list_is_active),
+    url(r'^api/users/switch/(?P<pk>[0-9]+)$', views.user_switch_is_active),
 
     url(r'^api/todos/user/(?P<user_id>[0-9]+)$', views.todo_list_by_user),
     url(r'^api/todos/user/(?P<user_id>[0-9]+)/(?P<is_complete>[0-1]+)$', views.todo_list_by_user),

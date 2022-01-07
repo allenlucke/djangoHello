@@ -33,7 +33,8 @@ def todo_list(request):
 
     elif request.method == 'DELETE':
         count = Todo.objects.all().delete()
-        return JsonResponse({'message': '{} Todo was deleted successfully!'.format(count[0])}, status=status.HTTP_204_NO_CONTENT)
+        return JsonResponse({'message': '{} Todo was deleted successfully!'.format(count[0])},
+                            status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -87,7 +88,9 @@ def todo_list_is_completed(request, bool):
             todo_serializer = TodoSerializer(todos, many=True)
             return JsonResponse(todo_serializer.data, safe=False)
         else:
-            return JsonResponse({'message': 'Hmmmn something is not right! Did you pass something other than a 0 or 1 for the url input?'}, status=status.HTTP_204_NO_CONTENT)
+            return JsonResponse({
+                                    'message': 'Hmmmn something is not right! Did you pass something other than a 0 or 1 for the url input?'},
+                                status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['PUT'])
@@ -109,7 +112,8 @@ def todo_switch_is_completed(request, pk):
         # set todo data
         todo_data = {
             'task': todo.task,
-            'is_complete': todo.is_complete
+            'is_complete': todo.is_complete,
+            'users_id': todo.users_id
         }
 
         todo_serializer = TodoSerializer(todo, data=todo_data)
@@ -117,6 +121,7 @@ def todo_switch_is_completed(request, pk):
             todo_serializer.save()
             return JsonResponse(todo_serializer.data)
         return JsonResponse(todo_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # Users views
 @api_view(['GET', 'POST'])
@@ -170,7 +175,9 @@ def users_list_is_active(request, bool):
             return JsonResponse(users_serializer.data, safe=False)
 
         else:
-            return JsonResponse({'message': 'Hmmmn something is not right! Did you pass something other than a 0 or 1 for the url input?'}, status=status.HTTP_204_NO_CONTENT)
+            return JsonResponse({
+                                    'message': 'Hmmmn something is not right! Did you pass something other than a 0 or 1 for the url input?'},
+                                status=status.HTTP_204_NO_CONTENT)
 
 
 # Todos filtered by user
@@ -194,4 +201,37 @@ def todo_list_by_user(request, user_id, is_complete):
             return JsonResponse(todos_serializer.data, safe=False)
 
         else:
-            return JsonResponse({'message': 'Hmmmn something is not right! Did you pass something other than a 0 or 1 for the url input?'}, status=status.HTTP_204_NO_CONTENT)
+            return JsonResponse({
+                                    'message': 'Hmmmn something is not right! Did you pass something other than a 0 or 1 for the url input?'},
+                                status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['GET'])
+def user_switch_is_active(request, pk):
+    print("In user_switch_is_active")
+    try:
+        user = Users.objects.get(pk=pk)
+    except Users.DoesNotExist:
+        return JsonResponse({'message': 'The user does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        # Switch is_complete
+        if not user.is_active:
+            user.is_active = True
+        else:
+            user.is_active = False
+
+        # set user data
+        user_data = {
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'username': user.username,
+            'password': user.password,
+            'is_active': user.is_active
+        }
+
+        user_serializer = UsersSerializer(user, data=user_data)
+        if user_serializer.is_valid():
+            user_serializer.save()
+            return JsonResponse(user_serializer.data)
+        return JsonResponse(user_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
