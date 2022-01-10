@@ -206,7 +206,7 @@ def todo_list_by_user(request, user_id, is_complete):
                                 status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(['GET'])
+@api_view(['PUT'])
 def user_switch_is_active(request, pk):
     print("In user_switch_is_active")
     try:
