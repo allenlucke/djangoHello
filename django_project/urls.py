@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("todo.urls")),
     url(r'^', include('todo.urls')),
+    url(r'^', include('csv_parser.urls')),
 ]

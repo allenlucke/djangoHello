@@ -12,6 +12,8 @@ from todo.serializers import TodoSerializer, UsersSerializer
 def homePageView(request):
     return HttpResponse("Hello, World!")
 
+def test(request):
+    return HttpResponse("Hello, World!")
 
 # Todos views
 @api_view(['GET', 'POST', 'DELETE'])

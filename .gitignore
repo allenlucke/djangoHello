@@ -171,3 +171,6 @@ client/node_modules
 
 ### vscode
 .vscode
+
+### csv files
+*.csv

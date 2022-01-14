@@ -39,8 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     "todo.apps.TodoConfig",
-    "csv_parser.apps.CsvParserConfig"
-    # CORS
+    "csv_parser.apps.CsvParserConfig",
     'corsheaders',
 ]
 
