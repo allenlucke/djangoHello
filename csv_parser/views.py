@@ -1,7 +1,10 @@
+import json
+
 from django.http import HttpResponse, JsonResponse
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.exceptions import ParseError
+from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from csv_parser.reader import cacu_csv_reader1
 from csv_parser.reader import cacu_csv_reader2
@@ -32,7 +35,13 @@ def file_test_2(request):
 
         file = request.FILES['file']
 
-        response_data = cacu_csv_reader2(file)
+        data = request.data['data']
+
+        json_request_data = json.loads(data)
+        print(json_request_data['usersId'])
+        # print(request_data)
+
+        response_data = cacu_csv_reader2(file, json_request_data)
 
         return JsonResponse(response_data)
-        return Response(status=status.HTTP_201_CREATED)
+        # return Response(status=status.HTTP_201_CREATED)
