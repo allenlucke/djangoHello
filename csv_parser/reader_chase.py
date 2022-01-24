@@ -1,4 +1,5 @@
 import csv
+from decimal import Decimal
 
 
 def chase_csv_reader1(file, json_request_data):
@@ -15,17 +16,17 @@ def chase_csv_reader1(file, json_request_data):
 
             line_count += 1
         else:
-            if row.get('Type') != 'Payment':
+            if row.get('Type') == 'Payment':
                 # Row has no amount credit, must be an expense
-                expense_item = map_expense_item(row, json_request_data)
+                expense_item = map_expense_item(row, json_request_data, True)
                 # Map row to expense item
                 expense_list.append(dict(expense_item))
 
-            # else:
-            #     # Else, must be income
-            #     income_item = map_income_item(row, json_request_data)
-            #     # Map row to income item
-            #     income_list.append(dict(income_item))
+            else:
+                # Else, must be payment
+                expense_item = map_expense_item(row, json_request_data, False)
+                # Map row to expense item
+                expense_list.append(dict(expense_item))
 
             line_count += 1
 
@@ -36,32 +37,17 @@ def chase_csv_reader1(file, json_request_data):
         'expenseItemList': expense_list
     }
 
-    # print(response_data)
-
     return response_data
 
 
-# def map_income_item(row, json_request_data):
-#     income_item = {
-#         'budgetIncomeCategoryId': '?',
-#         'name': row.get('Description'),
-#         'receivedDate': row.get('Date'),
-#         'amountExpected': abs(row.get('Amount Credit')),
-#         'amountReceived': abs(row.get('Amount Credit')),
-#         'accountId': json_request_data['accountId'],
-#         'usersId': json_request_data['usersId']
-#     }
-#     return income_item
-
-
-def map_expense_item(row, json_request_data):
+def map_expense_item(row, json_request_data, paymentToCreditAccount):
     expense_item = {
         'budgetExpenseCategoryId': '?',
         'name': row.get('Description'),
         'transactionDate': row.get('Transaction Date'),
-        'amount': row.get('Amount'),
+        'amount': abs(Decimal(row.get('Amount'))),
         'paidWithCredit': True,
-        'paymentToCreditAccount': False,
+        'paymentToCreditAccount': paymentToCreditAccount,
         'interestPaymentToCreditAccount': False,
         'accountId': json_request_data['accountId'],
         'usersId': json_request_data['usersId']
