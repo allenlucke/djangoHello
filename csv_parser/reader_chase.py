@@ -4,10 +4,8 @@ from decimal import Decimal
 
 def chase_csv_reader1(file, json_request_data):
     decoded_file = file.read().decode('utf-8').splitlines()
-    # reader = csv.DictReader(decoded_file, delimiter=',')
     reader = csv.DictReader(decoded_file)
     line_count = 0
-    income_list = []
     expense_list = []
 
     for row in reader:
@@ -30,10 +28,7 @@ def chase_csv_reader1(file, json_request_data):
 
             line_count += 1
 
-    # print(income_list)
-
     response_data = {
-        # 'incomeItemList': income_list,
         'expenseItemList': expense_list
     }
 
